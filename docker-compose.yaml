@@ -10,7 +10,7 @@ services:
       - "9095:9095"
       - "9001:9000"
     volumes:
-      - "../target/wasm32-unknown-unknown/release/envoy_wasm_body_transform.wasm:/usr/local/bin/envoy_wasm_body_transform.wasm"
+      - "./envoy_wasm_body_transform.wasm"
       - "./envoy.yaml:/etc/envoy/envoy.yaml"
     command: envoy -c /etc/envoy/envoy.yaml -l trace
 
