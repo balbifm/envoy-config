@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+  proxy:
+    image: envoyproxy/envoy:v1.31.0
+    depends_on:
+      - backend_service
+    networks:
+      - envoymesh
+    ports:
+      - "9095:9095"
+      - "9001:9000"
+    volumes:
+      - "../target/wasm32-unknown-unknown/release/envoy_wasm_body_transform.wasm:/usr/local/bin/envoy_wasm_body_transform.wasm"
+      - "./envoy.yaml:/etc/envoy/envoy.yaml"
+    command: envoy -c /etc/envoy/envoy.yaml -l trace
+
+  nginx:
+    image: nginx:latest
+    networks:
+      - envoymesh
+    ports:
+      - "8443:443"
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "./ssl/nginx.crt:/etc/nginx/ssl/nginx.crt:ro"
+      - "./ssl/nginx.key:/etc/nginx/ssl/nginx.key:ro"
+      - "./payload:/usr/share/nginx/html/index.html"
+
+networks:
+  envoymesh:
+    name: envoymesh
