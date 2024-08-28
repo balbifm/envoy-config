@@ -26,11 +26,11 @@ impl Context for HttpBodyTransform {}
 /// to the filter, then we need to implement RootContext also. RootContext gets created per each
 /// worker thread per plugin.
 impl HttpContext for HttpBodyTransform {
-    fn on_http_response_headers(&mut self, _num_headers: usize, _end_of_stream: bool) -> Action {
-        // Clean the content-length as we are going to change the size
-        self.set_http_response_header("content-length", None);
-        Action::Continue
-    }
+    // fn on_http_response_headers(&mut self, _num_headers: usize, _end_of_stream: bool) -> Action {
+    //     // Clean the content-length as we are going to change the size
+    //     self.set_http_response_header("content-length", None);
+    //     Action::Continue
+    // }
 
     fn on_http_response_body(&mut self, _body_size: usize, _end_of_stream: bool) -> Action {
         let response_size = self.get_property(vec!["response", "size"]).unwrap_or_default();
